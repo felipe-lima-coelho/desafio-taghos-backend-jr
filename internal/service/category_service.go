@@ -75,13 +75,13 @@ func (s *categoryService) UpdateCategory(category *domain.Category) error {
 		return fmt.Errorf("error while trying to find the category by ID: %v", err)
 	}
 
-	var nameIsChanged bool
+	var isNameChanged bool
 	if newCategoryName != categoryOnDB.Name {
 		categoryOnDB.Name = newCategoryName
-		nameIsChanged = true
+		isNameChanged = true
 	}
 
-	if !nameIsChanged {
+	if !isNameChanged {
 		// If the name is not changed, there is no need to update the category
 		return nil
 	}
