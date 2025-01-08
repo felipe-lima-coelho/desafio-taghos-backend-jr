@@ -21,3 +21,7 @@ type categoryService struct {
 func NewCategoryService(categoryRepo repository.CategoryRepository) CategoryService {
 	return &categoryService{categoryRepo}
 }
+
+func (s *categoryService) FindCategoryByName(name string) (*domain.Category, error) {
+	return s.categoryRepo.FindByName(name)
+}
