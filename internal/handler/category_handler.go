@@ -17,6 +17,11 @@ type categoryRequest struct {
 	Name string `binding:"required"`
 }
 
+type categoryResponse struct {
+	ID   string
+	Name string
+}
+
 func NewCategoryHandler(categoryService service.CategoryService) *CategoryHandler {
 	return &CategoryHandler{categoryService}
 }
@@ -246,4 +251,11 @@ func (h *CategoryHandler) DeleteCategoryByID(c *gin.Context) {
 		http.StatusNoContent,
 		gin.H{},
 	)
+}
+
+func (h *CategoryHandler) formatCategoryDataReturn(category *domain.Category) categoryResponse {
+	return categoryResponse{
+		ID:   category.ID,
+		Name: category.Name,
+	}
 }
