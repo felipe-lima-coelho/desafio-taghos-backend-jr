@@ -1,10 +1,12 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/felipe-lima-coelho/desafio-taghos-backend-jr/internal/domain"
 	"github.com/felipe-lima-coelho/desafio-taghos-backend-jr/internal/repository"
+	"gorm.io/gorm"
 )
 
 type BookService interface {
@@ -71,4 +73,25 @@ func (s *bookService) validateBook(book *domain.Book) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func (s *bookService) handleCategory(book *domain.Book) (*domain.Book, error) {
+	catService := NewCategoryService(s.categoryRepo)
+
+	for _, category := range book.Categories {
+		// Check if the category already exists
+		// If not, create it
+		_, err := catService.FindCategoryByName(category.Name)
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				return nil, fmt.Errorf("error while trying to find the category by name: %v", err)
+			}
+
+			if err := catService.CreateCategory(&category); err != nil {
+				return nil, fmt.Errorf("error while trying to create the category: %v", err)
+			}
+		}
+	}
+
+	return book, nil
 }
