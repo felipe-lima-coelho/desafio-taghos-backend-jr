@@ -35,3 +35,12 @@ func (r *gormBookRepository) FindByID(id string) (*domain.Book, error) {
 
 	return &book, nil
 }
+
+func (r *gormBookRepository) FindByTitle(title string) (*domain.Book, error) {
+	var book domain.Book
+	if err := r.db.First(&book, "title = ?", title).Error; err != nil {
+		return nil, err
+	}
+
+	return &book, nil
+}
