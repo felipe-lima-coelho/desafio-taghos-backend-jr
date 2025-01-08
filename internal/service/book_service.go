@@ -156,3 +156,49 @@ func (s *bookService) FindBookByTitle(title string) (*domain.Book, error) {
 func (s *bookService) FindAllBooks() ([]*domain.Book, error) {
 	return s.bookRepo.FindAll()
 }
+
+func (s *bookService) UpdateBook(book *domain.Book) error {
+	bookID := book.ID
+
+	if bookID == "" {
+		return fmt.Errorf("book ID is required")
+	}
+
+	bookOnDB, err := s.FindBookByID(bookID)
+	if err != nil {
+		return fmt.Errorf("error in book_services while trying to find the book by ID: %v", err)
+	}
+
+	bookOnDB, isCatCreated, err := s.handleCategory(bookOnDB)
+	if err != nil {
+		return fmt.Errorf("error in book_services while handling category: %v", err)
+	}
+
+	bookOnDB, isAutCreated, err := s.handleAuthor(bookOnDB)
+	if err != nil {
+		return fmt.Errorf("error in book_services while handling author: %v", err)
+	}
+
+	var isTitleChanged, isSynopsisChanged bool
+	if book.Title != bookOnDB.Title {
+		bookOnDB.Title = book.Title
+		isTitleChanged = true
+	}
+	if book.Synopsis != bookOnDB.Synopsis {
+		bookOnDB.Synopsis = book.Synopsis
+		isSynopsisChanged = true
+	}
+
+	if !*isCatCreated && !*isAutCreated && !isTitleChanged && !isSynopsisChanged {
+		// If the title, synopsis, category and author
+		// are not changed, there is no need to update the book
+		return nil
+	}
+
+	err = s.bookRepo.Update(bookOnDB)
+	if err != nil {
+		return fmt.Errorf("error in book_services while trying to update the book: %v", err)
+	}
+
+	return nil
+}
