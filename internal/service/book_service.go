@@ -202,3 +202,16 @@ func (s *bookService) UpdateBook(book *domain.Book) error {
 
 	return nil
 }
+
+func (s *bookService) DeleteBookByID(id string) error {
+	if id == "" {
+		return fmt.Errorf("book ID is required")
+	}
+
+	err := s.bookRepo.Delete(id)
+	if err != nil {
+		return fmt.Errorf("error in book_services while trying to delete the book by ID: %v", err)
+	}
+
+	return nil
+}
