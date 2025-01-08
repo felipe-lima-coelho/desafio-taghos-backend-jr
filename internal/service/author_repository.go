@@ -58,3 +58,33 @@ func (s *authorService) FindAuthorByName(name string) (*domain.Author, error) {
 func (s *authorService) FindAllAuthors() ([]*domain.Author, error) {
 	return s.authorRepo.FindAll()
 }
+
+func (s *authorService) UpdateAuthor(author *domain.Author) error {
+	authorID := author.ID
+	newAuthorName := author.Name
+
+	if authorID == "" {
+		return fmt.Errorf("author ID is required")
+	}
+	if newAuthorName == "" {
+		return fmt.Errorf("author name is required")
+	}
+
+	authorOnDB, err := s.FindAuthorByID(authorID)
+	if err != nil {
+		return fmt.Errorf("error while trying to find the author by ID: %v", err)
+	}
+
+	var isNameChanged bool
+	if newAuthorName != authorOnDB.Name {
+		authorOnDB.Name = newAuthorName
+		isNameChanged = true
+	}
+
+	if !isNameChanged {
+		// If the name is not changed, there is no need to update the category
+		return nil
+	}
+
+	return s.authorRepo.Update(authorOnDB)
+}
