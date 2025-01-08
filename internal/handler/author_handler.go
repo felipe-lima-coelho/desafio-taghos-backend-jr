@@ -69,6 +69,47 @@ func (h *AuthorHandler) CreateAuthor(c *gin.Context) {
 	)
 }
 
+func (h *AuthorHandler) FindAuthorByID(c *gin.Context) {
+	authorID := c.Param("id")
+	if authorID == "" {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "INVALID_REQUEST_PARAMETER",
+					"message": "invalid request parameter",
+					"details": errors.New("Author ID is required"),
+				},
+			},
+		)
+		return
+	}
+
+	author, err := h.authorService.FindAuthorByID(authorID)
+	if err != nil {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "FIND_AUTHOR_BY_ID_ERROR",
+					"message": "error while finding author by ID",
+					"details": errors.New("Error while finding author by ID: " + err.Error()),
+				},
+			},
+		)
+		return
+	}
+
+	c.JSON(
+		http.StatusOK,
+		gin.H{
+			"data": gin.H{
+				"author": h.formatAuthorResponse(author),
+			},
+		},
+	)
+}
+
 func (h *AuthorHandler) formatAuthorResponse(author *authorResponse) *authorResponse {
 	return &authorResponse{
 		ID:   author.ID,
