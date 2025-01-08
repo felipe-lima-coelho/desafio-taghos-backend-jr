@@ -32,7 +32,7 @@ func (s *categoryService) CreateCategory(category *domain.Category) error {
 	}
 
 	// Check if the category already exists
-	if _, err := s.categoryRepo.FindByName(categoryName); err == nil {
+	if _, err := s.FindCategoryByName(categoryName); err == nil {
 		return fmt.Errorf("category already exists")
 	}
 
