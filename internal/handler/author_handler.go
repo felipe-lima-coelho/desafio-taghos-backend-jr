@@ -228,11 +228,7 @@ func (h *AuthorHandler) UpdateAuthor(c *gin.Context) {
 
 	c.JSON(
 		http.StatusNoContent,
-		gin.H{
-			"data": gin.H{
-				"message": "Author updated successfully",
-			},
-		},
+		gin.H{},
 	)
 }
 
