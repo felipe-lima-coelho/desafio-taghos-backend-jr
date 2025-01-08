@@ -236,6 +236,42 @@ func (h *AuthorHandler) UpdateAuthor(c *gin.Context) {
 	)
 }
 
+func (h *AuthorHandler) DeleteAuthorByID(c *gin.Context) {
+	authorID := c.Param("id")
+	if authorID == "" {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "INVALID_REQUEST_PARAMETER",
+					"message": "invalid request parameter",
+					"details": errors.New("Author ID is required"),
+				},
+			},
+		)
+		return
+	}
+
+	if err := h.authorService.DeleteAuthorByID(authorID); err != nil {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "DELETE_AUTHOR_BY_ID_ERROR",
+					"message": "error while deleting author by ID",
+					"details": errors.New("Error while deleting author by ID: " + err.Error()),
+				},
+			},
+		)
+		return
+	}
+
+	c.JSON(
+		http.StatusNoContent,
+		gin.H{},
+	)
+}
+
 func (h *AuthorHandler) formatAuthorResponse(author *domain.Author) *authorResponse {
 	return &authorResponse{
 		ID:   author.ID,
