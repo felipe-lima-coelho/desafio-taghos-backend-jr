@@ -63,7 +63,7 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 		http.StatusCreated,
 		gin.H{
 			"data": gin.H{
-				"category": category,
+				"category": h.formatCategoryDataReturn(&category),
 			},
 		},
 	)
@@ -104,7 +104,7 @@ func (h *CategoryHandler) FindCategoryByID(c *gin.Context) {
 		http.StatusOK,
 		gin.H{
 			"data": gin.H{
-				"category": category,
+				"category": h.formatCategoryDataReturn(category),
 			},
 		},
 	)
@@ -145,7 +145,7 @@ func (h *CategoryHandler) FindCategoryByName(c *gin.Context) {
 		http.StatusOK,
 		gin.H{
 			"data": gin.H{
-				"category": category,
+				"category": h.formatCategoryDataReturn(category),
 			},
 		},
 	)
@@ -167,11 +167,16 @@ func (h *CategoryHandler) FindAllCategories(c *gin.Context) {
 		return
 	}
 
+	catFormated := []categoryResponse{}
+	for _, category := range categories {
+		catFormated = append(catFormated, h.formatCategoryDataReturn(category))
+	}
+
 	c.JSON(
 		http.StatusOK,
 		gin.H{
 			"data": gin.H{
-				"categories": categories,
+				"categories": catFormated,
 			},
 		},
 	)
@@ -211,7 +216,7 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 		http.StatusOK,
 		gin.H{
 			"data": gin.H{
-				"category": category,
+				"category": h.formatCategoryDataReturn(&category),
 			},
 		},
 	)
