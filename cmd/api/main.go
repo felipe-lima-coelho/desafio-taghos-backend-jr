@@ -19,6 +19,6 @@ func main() {
 
 	// Initialize the repositories
 	bookRepo := repository.NewBookRepository(db)
-	categoryRepo := repository.NewCategoriesRepository(db)
+	categoryRepo := repository.NewCategoryRepository(db)
 	authorRepo := repository.NewAuthorRepository(db)
 }

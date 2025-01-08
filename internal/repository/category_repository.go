@@ -19,7 +19,7 @@ type gormCategoriesRepository struct {
 	db *gorm.DB
 }
 
-func NewCategoriesRepository(db *gorm.DB) CategoryRepository {
+func NewCategoryRepository(db *gorm.DB) CategoryRepository {
 	return &gormCategoriesRepository{db}
 }
 
