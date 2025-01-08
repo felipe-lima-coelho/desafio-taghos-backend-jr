@@ -174,7 +174,7 @@ func (h *CategoryHandler) FindAllCategories(c *gin.Context) {
 				"error": gin.H{
 					"code":    "CATEGORIES_NOT_FOUND",
 					"message": "categories not found",
-					"details": errors.New("Categories not found"),
+					"details": "Categories not found in the database",
 				},
 			},
 		)
