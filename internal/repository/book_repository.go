@@ -22,3 +22,7 @@ type gormBookRepository struct {
 func NewBookRepository(db *gorm.DB) BookRepository {
 	return &gormBookRepository{db}
 }
+
+func (r *gormBookRepository) Create(book *domain.Book) error {
+	return r.db.Create(book).Error
+}
