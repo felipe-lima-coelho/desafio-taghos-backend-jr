@@ -62,3 +62,7 @@ func (r *gormBookRepository) FindAll() ([]*domain.Book, error) {
 
 	return books, nil
 }
+
+func (r *gormBookRepository) Update(book *domain.Book) error {
+	return r.db.Save(book).Error
+}
