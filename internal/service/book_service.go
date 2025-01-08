@@ -116,3 +116,16 @@ func (s *bookService) handleAuthor(book *domain.Book) (*domain.Book, error) {
 
 	return book, nil
 }
+
+func (s *bookService) FindBookByID(id string) (*domain.Book, error) {
+	if id == "" {
+		return nil, fmt.Errorf("book ID is required")
+	}
+
+	book, err := s.bookRepo.FindByID(id)
+	if err != nil {
+		return nil, fmt.Errorf("error book_services while trying to find the book by ID: %v", err)
+	}
+
+	return book, nil
+}
