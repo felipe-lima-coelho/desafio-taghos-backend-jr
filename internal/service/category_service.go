@@ -54,3 +54,7 @@ func (s *categoryService) FindCategoryByName(name string) (*domain.Category, err
 
 	return s.categoryRepo.FindByName(name)
 }
+
+func (s *categoryService) FindAllCategories() ([]*domain.Category, error) {
+	return s.categoryRepo.FindAll()
+}
