@@ -142,3 +142,7 @@ func (s *bookService) FindBookByTitle(title string) (*domain.Book, error) {
 
 	return book, nil
 }
+
+func (s *bookService) FindAllBooks() ([]*domain.Book, error) {
+	return s.bookRepo.FindAll()
+}
