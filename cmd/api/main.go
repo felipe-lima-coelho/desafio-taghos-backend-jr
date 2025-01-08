@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/felipe-lima-coelho/desafio-taghos-backend-jr/internal/config"
+	"github.com/felipe-lima-coelho/desafio-taghos-backend-jr/internal/repository"
 	"github.com/joho/godotenv"
 )
 
@@ -15,4 +16,9 @@ func main() {
 
 	// Initialize the database connection
 	db := config.Database()
+
+	// Initialize the repositories
+	bookRepo := repository.NewBookRepository(db)
+	categoryRepo := repository.NewCategoriesRepository(db)
+	authorRepo := repository.NewAuthorRepository(db)
 }
