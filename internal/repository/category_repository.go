@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type CategoriesRepository interface {
+type CategoryRepository interface {
 	Create(category *domain.Category) error
 	FindByID(id string) (*domain.Category, error)
 	FindByName(name string) (*domain.Category, error)
@@ -19,7 +19,7 @@ type gormCategoriesRepository struct {
 	db *gorm.DB
 }
 
-func NewCategoriesRepository(db *gorm.DB) CategoriesRepository {
+func NewCategoriesRepository(db *gorm.DB) CategoryRepository {
 	return &gormCategoriesRepository{db}
 }
 
