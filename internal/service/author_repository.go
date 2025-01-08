@@ -88,3 +88,11 @@ func (s *authorService) UpdateAuthor(author *domain.Author) error {
 
 	return s.authorRepo.Update(authorOnDB)
 }
+
+func (s *authorService) DeleteAuthorByID(id string) error {
+	if id == "" {
+		return fmt.Errorf("author ID is required")
+	}
+
+	return s.authorRepo.Delete(id)
+}
