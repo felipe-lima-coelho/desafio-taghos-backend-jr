@@ -78,7 +78,7 @@ func (h *CategoryHandler) FindCategoryByID(c *gin.Context) {
 				"error": gin.H{
 					"code":    "INVALID_REQUEST_PARAMETER",
 					"message": "invalid request parameter",
-					"details": errors.New("ID is required"),
+					"details": "ID is required",
 				},
 			},
 		)
