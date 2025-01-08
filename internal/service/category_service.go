@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com/felipe-lima-coelho/desafio-taghos-backend-jr/internal/domain"
 	"github.com/felipe-lima-coelho/desafio-taghos-backend-jr/internal/repository"
 )
@@ -20,6 +22,21 @@ type categoryService struct {
 
 func NewCategoryService(categoryRepo repository.CategoryRepository) CategoryService {
 	return &categoryService{categoryRepo}
+}
+
+func (s *categoryService) CreateCategory(category *domain.Category) error {
+	categoryName := category.Name
+
+	if categoryName == "" {
+		return fmt.Errorf("category name is required")
+	}
+
+	// Check if the category already exists
+	if _, err := s.categoryRepo.FindByName(categoryName); err == nil {
+		return fmt.Errorf("category already exists")
+	}
+
+	return s.categoryRepo.Create(category)
 }
 
 func (s *categoryService) FindCategoryByName(name string) (*domain.Category, error) {
