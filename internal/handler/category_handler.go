@@ -63,7 +63,7 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 		http.StatusCreated,
 		gin.H{
 			"data": gin.H{
-				"category": h.formatCategoryDataReturn(&category),
+				"message": "Category created successfully",
 			},
 		},
 	)
