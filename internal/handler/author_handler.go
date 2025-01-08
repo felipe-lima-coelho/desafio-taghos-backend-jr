@@ -20,3 +20,10 @@ type authorResponse struct {
 func NewAuthorHandler(authorService service.AuthorService) *AuthorHandler {
 	return &AuthorHandler{authorService}
 }
+
+func (h *AuthorHandler) formatAuthorResponse(author *authorResponse) *authorResponse {
+	return &authorResponse{
+		ID:   author.ID,
+		Name: author.Name,
+	}
+}
