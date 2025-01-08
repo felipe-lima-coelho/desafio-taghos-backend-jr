@@ -38,12 +38,12 @@ func (s *bookService) CreateBook(book *domain.Book) error {
 		return fmt.Errorf("invalid book: %v", err)
 	}
 
-	book, err := s.handleCategory(book)
+	book, err = s.handleCategory(book)
 	if err != nil {
 		return fmt.Errorf("error while handling category: %v", err)
 	}
 
-	book, err := s.handleAuthor(book)
+	book, err = s.handleAuthor(book)
 	if err != nil {
 		return fmt.Errorf("error while handling author: %v", err)
 	}
