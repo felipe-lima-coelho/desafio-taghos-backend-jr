@@ -38,7 +38,7 @@ func (s *bookService) CreateBook(book *domain.Book) error {
 		return fmt.Errorf("invalid book: %v", err)
 	}
 
-	book, err = s.handleCategory(book)
+	book, _, err = s.handleCategory(book)
 	if err != nil {
 		return fmt.Errorf("error in book_services while handling category: %v", err)
 	}
@@ -75,7 +75,10 @@ func (s *bookService) validateBook(book *domain.Book) (bool, error) {
 	return true, nil
 }
 
-func (s *bookService) handleCategory(book *domain.Book) (*domain.Book, error) {
+func (s *bookService) handleCategory(book *domain.Book) (*domain.Book, *bool, error) {
+	trueValue := true
+	falseValue := false
+	isCategoryCreated := &falseValue
 	catService := NewCategoryService(s.categoryRepo)
 
 	for _, category := range book.Categories {
@@ -84,16 +87,18 @@ func (s *bookService) handleCategory(book *domain.Book) (*domain.Book, error) {
 		_, err := catService.FindCategoryByName(category.Name)
 		if err != nil {
 			if !errors.Is(err, gorm.ErrRecordNotFound) {
-				return nil, fmt.Errorf("error in book_services while trying to find the category by name: %v", err)
+				return nil, nil, fmt.Errorf("error in book_services while trying to find the category by name: %v", err)
 			}
 
 			if err := catService.CreateCategory(&category); err != nil {
-				return nil, fmt.Errorf("error in book_services while trying to create the category: %v", err)
+				return nil, nil, fmt.Errorf("error in book_services while trying to create the category: %v", err)
 			}
+
+			isCategoryCreated = &trueValue
 		}
 	}
 
-	return book, nil
+	return book, isCategoryCreated, nil
 }
 
 func (s *bookService) handleAuthor(book *domain.Book) (*domain.Book, error) {
