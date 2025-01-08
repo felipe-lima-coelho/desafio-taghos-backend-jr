@@ -110,7 +110,7 @@ func (h *AuthorHandler) FindAuthorByID(c *gin.Context) {
 	)
 }
 
-func (h *AuthorHandler) formatAuthorResponse(author *authorResponse) *authorResponse {
+func (h *AuthorHandler) formatAuthorResponse(author *domain.Author) *authorResponse {
 	return &authorResponse{
 		ID:   author.ID,
 		Name: author.Name,
