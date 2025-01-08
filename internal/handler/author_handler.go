@@ -196,6 +196,46 @@ func (h *AuthorHandler) FindAllAuthors(c *gin.Context) {
 	)
 }
 
+func (h *AuthorHandler) UpdateAuthor(c *gin.Context) {
+	var author domain.Author
+	if err := c.ShouldBindJSON(&author); err != nil {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "INVALID_REQUEST_BODY",
+					"message": "invalid request body",
+					"details": errors.New("Error while binding JSON: " + err.Error()),
+				},
+			},
+		)
+		return
+	}
+
+	if err := h.authorService.UpdateAuthor(&author); err != nil {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "UPDATE_AUTHOR_ERROR",
+					"message": "error while updating author",
+					"details": errors.New("Error while updating author: " + err.Error()),
+				},
+			},
+		)
+		return
+	}
+
+	c.JSON(
+		http.StatusNoContent,
+		gin.H{
+			"data": gin.H{
+				"message": "Author updated successfully",
+			},
+		},
+	)
+}
+
 func (h *AuthorHandler) formatAuthorResponse(author *domain.Author) *authorResponse {
 	return &authorResponse{
 		ID:   author.ID,
