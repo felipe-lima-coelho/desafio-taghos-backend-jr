@@ -24,6 +24,21 @@ func NewAuthorService(authorRepo repository.AuthorRepository) AuthorService {
 	return &authorService{authorRepo}
 }
 
+func (s *authorService) CreateAuthor(author *domain.Author) error {
+	authorName := author.Name
+
+	if authorName == "" {
+		return fmt.Errorf("author name is required")
+	}
+
+	// Check if the author already exists
+	if _, err := s.FindAuthorByName(authorName); err == nil {
+		return fmt.Errorf("author already exists")
+	}
+
+	return s.authorRepo.Create(author)
+}
+
 func (s *authorService) FindAuthorByName(name string) (*domain.Author, error) {
 	if name == "" {
 		return nil, fmt.Errorf("author name is required")
