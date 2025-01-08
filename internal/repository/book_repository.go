@@ -29,7 +29,10 @@ func (r *gormBookRepository) Create(book *domain.Book) error {
 
 func (r *gormBookRepository) FindByID(id string) (*domain.Book, error) {
 	var book domain.Book
-	if err := r.db.First(&book, id).Error; err != nil {
+	if err := r.db.
+		Preload("Categories").
+		Preload("Authors").
+		First(&book, id).Error; err != nil {
 		return nil, err
 	}
 
@@ -38,7 +41,10 @@ func (r *gormBookRepository) FindByID(id string) (*domain.Book, error) {
 
 func (r *gormBookRepository) FindByTitle(title string) (*domain.Book, error) {
 	var book domain.Book
-	if err := r.db.First(&book, "title = ?", title).Error; err != nil {
+	if err := r.db.
+		Preload("Categories").
+		Preload("Authors").
+		First(&book, "title = ?", title).Error; err != nil {
 		return nil, err
 	}
 
