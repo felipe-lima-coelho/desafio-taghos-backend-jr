@@ -54,3 +54,7 @@ func (s *authorService) FindAuthorByName(name string) (*domain.Author, error) {
 
 	return s.authorRepo.FindByName(name)
 }
+
+func (s *authorService) FindAllAuthors() ([]*domain.Author, error) {
+	return s.authorRepo.FindAll()
+}
