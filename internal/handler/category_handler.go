@@ -13,13 +13,17 @@ type CategoryHandler struct {
 	categoryService service.CategoryService
 }
 
+type categoryRequest struct {
+	Name string `binding:"required"`
+}
+
 func NewCategoryHandler(categoryService service.CategoryService) *CategoryHandler {
 	return &CategoryHandler{categoryService}
 }
 
 func (h *CategoryHandler) CreateCategory(c *gin.Context) {
-	var category domain.Category
-	if err := c.ShouldBindJSON(&category); err != nil {
+	var request categoryRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
 		c.JSON(
 			http.StatusBadRequest,
 			gin.H{
@@ -32,6 +36,9 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 		)
 		return
 	}
+
+	var category domain.Category
+	category.Name = request.Name
 
 	if err := h.categoryService.CreateCategory(&category); err != nil {
 		c.JSON(
