@@ -50,3 +50,15 @@ func (r *gormBookRepository) FindByTitle(title string) (*domain.Book, error) {
 
 	return &book, nil
 }
+
+func (r *gormBookRepository) FindAll() ([]*domain.Book, error) {
+	var books []*domain.Book
+	if err := r.db.
+		Preload("Categories").
+		Preload("Authors").
+		Find(&books).Error; err != nil {
+		return nil, err
+	}
+
+	return books, nil
+}
