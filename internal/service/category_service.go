@@ -70,7 +70,7 @@ func (s *categoryService) UpdateCategory(category *domain.Category) error {
 		return fmt.Errorf("category name is required")
 	}
 
-	categoryOnDB, err := s.categoryRepo.FindByID(categoryID)
+	categoryOnDB, err := s.FindCategoryByID(categoryID)
 	if err != nil {
 		return fmt.Errorf("error while trying to find the category by ID: %v", err)
 	}
