@@ -110,6 +110,51 @@ func (h *AuthorHandler) FindAuthorByID(c *gin.Context) {
 	)
 }
 
+func (h *AuthorHandler) FindAllAuthors(c *gin.Context) {
+	authors, err := h.authorService.FindAllAuthors()
+	if err != nil {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "FIND_ALL_AUTHORS_ERROR",
+					"message": "error while finding all authors",
+					"details": errors.New("Error while finding all authors: " + err.Error()),
+				},
+			},
+		)
+		return
+	}
+
+	if len(authors) == 0 {
+		c.JSON(
+			http.StatusNotFound,
+			gin.H{
+				"error": gin.H{
+					"code":    "AUTHORS_NOT_FOUND",
+					"message": "authors not found",
+					"details": "Authors not found in the database",
+				},
+			},
+		)
+		return
+	}
+
+	var authorsResponse []*authorResponse
+	for _, author := range authors {
+		authorsResponse = append(authorsResponse, h.formatAuthorResponse(author))
+	}
+
+	c.JSON(
+		http.StatusOK,
+		gin.H{
+			"data": gin.H{
+				"authors": authorsResponse,
+			},
+		},
+	)
+}
+
 func (h *AuthorHandler) formatAuthorResponse(author *domain.Author) *authorResponse {
 	return &authorResponse{
 		ID:   author.ID,
