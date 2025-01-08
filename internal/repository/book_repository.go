@@ -26,3 +26,12 @@ func NewBookRepository(db *gorm.DB) BookRepository {
 func (r *gormBookRepository) Create(book *domain.Book) error {
 	return r.db.Create(book).Error
 }
+
+func (r *gormBookRepository) FindByID(id string) (*domain.Book, error) {
+	var book domain.Book
+	if err := r.db.First(&book, id).Error; err != nil {
+		return nil, err
+	}
+
+	return &book, nil
+}
