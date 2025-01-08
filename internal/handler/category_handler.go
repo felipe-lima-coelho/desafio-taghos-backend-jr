@@ -56,3 +56,44 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 		},
 	)
 }
+
+func (h *CategoryHandler) FindCategoryByID(c *gin.Context) {
+	id := c.Param("id")
+	if id == "" {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "INVALID_REQUEST_PARAMETER",
+					"message": "invalid request parameter",
+					"details": errors.New("ID is required"),
+				},
+			},
+		)
+		return
+	}
+
+	category, err := h.categoryService.FindCategoryByID(id)
+	if err != nil {
+		c.JSON(
+			http.StatusNotFound,
+			gin.H{
+				"error": gin.H{
+					"code":    "CATEGORY_NOT_FOUND",
+					"message": "error while finding category by ID",
+					"details": errors.New("Error while finding category by ID: " + err.Error()),
+				},
+			},
+		)
+		return
+	}
+
+	c.JSON(
+		http.StatusOK,
+		gin.H{
+			"data": gin.H{
+				"category": category,
+			},
+		},
+	)
+}
