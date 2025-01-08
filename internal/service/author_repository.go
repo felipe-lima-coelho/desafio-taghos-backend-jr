@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com/felipe-lima-coelho/desafio-taghos-backend-jr/internal/domain"
 	"github.com/felipe-lima-coelho/desafio-taghos-backend-jr/internal/repository"
 )
@@ -20,4 +22,12 @@ type authorService struct {
 
 func NewAuthorService(authorRepo repository.AuthorRepository) AuthorService {
 	return &authorService{authorRepo}
+}
+
+func (s *authorService) FindAuthorByName(name string) (*domain.Author, error) {
+	if name == "" {
+		return nil, fmt.Errorf("author name is required")
+	}
+
+	return s.authorRepo.FindByName(name)
 }
