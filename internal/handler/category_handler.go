@@ -138,3 +138,69 @@ func (h *CategoryHandler) FindCategoryByName(c *gin.Context) {
 		},
 	)
 }
+
+func (h *CategoryHandler) FindAllCategories(c *gin.Context) {
+	categories, err := h.categoryService.FindAllCategories()
+	if err != nil {
+		c.JSON(
+			http.StatusNotFound,
+			gin.H{
+				"error": gin.H{
+					"code":    "CATEGORIES_NOT_FOUND",
+					"message": "error while finding all categories",
+					"details": errors.New("Error while finding all categories: " + err.Error()),
+				},
+			},
+		)
+		return
+	}
+
+	c.JSON(
+		http.StatusOK,
+		gin.H{
+			"data": gin.H{
+				"categories": categories,
+			},
+		},
+	)
+}
+
+func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
+	var category domain.Category
+	if err := c.ShouldBindJSON(&category); err != nil {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "INVALID_REQUEST_BODY",
+					"message": "invalid request body",
+					"details": errors.New("Error while binding JSON: " + err.Error()),
+				},
+			},
+		)
+		return
+	}
+
+	if err := h.categoryService.UpdateCategory(&category); err != nil {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "UPDATE_CATEGORY_ERROR",
+					"message": "error while updating category",
+					"details": errors.New("Error while updating category: " + err.Error()),
+				},
+			},
+		)
+		return
+	}
+
+	c.JSON(
+		http.StatusOK,
+		gin.H{
+			"data": gin.H{
+				"category": category,
+			},
+		},
+	)
+}
