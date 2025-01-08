@@ -95,3 +95,24 @@ func (s *bookService) handleCategory(book *domain.Book) (*domain.Book, error) {
 
 	return book, nil
 }
+
+func (s *bookService) handleAuthor(book *domain.Book) (*domain.Book, error) {
+	authorService := NewAuthorService(s.authorRepo)
+
+	for _, author := range book.Authors {
+		// Check if the author already exists
+		// If not, create it
+		_, err := authorService.FindAuthorByName(author.Name)
+		if err != nil {
+			if !errors.Is(err, gorm.ErrRecordNotFound) {
+				return nil, fmt.Errorf("error while trying to find the author by name: %v", err)
+			}
+
+			if err := authorService.CreateAuthor(&author); err != nil {
+				return nil, fmt.Errorf("error while trying to create the author: %v", err)
+			}
+		}
+	}
+
+	return book, nil
+}
