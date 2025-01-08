@@ -129,3 +129,16 @@ func (s *bookService) FindBookByID(id string) (*domain.Book, error) {
 
 	return book, nil
 }
+
+func (s *bookService) FindBookByTitle(title string) (*domain.Book, error) {
+	if title == "" {
+		return nil, fmt.Errorf("book title is required")
+	}
+
+	book, err := s.bookRepo.FindByTitle(title)
+	if err != nil {
+		return nil, fmt.Errorf("error while trying to find the book by title: %v", err)
+	}
+
+	return book, nil
+}
