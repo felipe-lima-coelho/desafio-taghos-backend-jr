@@ -48,3 +48,27 @@ func (s *bookService) CreateBook(book *domain.Book) error {
 
 	return s.bookRepo.Create(book)
 }
+
+func (s *bookService) validateBook(book *domain.Book) (bool, error) {
+	if book.Title == "" {
+		return false, fmt.Errorf("title is required")
+	}
+
+	if book.Synopsis == "" {
+		return false, fmt.Errorf("synopsis is required")
+	}
+
+	for _, category := range book.Categories {
+		if category.Name == "" {
+			return false, fmt.Errorf("category name is required")
+		}
+	}
+
+	for _, author := range book.Authors {
+		if author.Name == "" {
+			return false, fmt.Errorf("author name is required")
+		}
+	}
+
+	return true, nil
+}
