@@ -39,6 +39,14 @@ func (s *authorService) CreateAuthor(author *domain.Author) error {
 	return s.authorRepo.Create(author)
 }
 
+func (s *authorService) FindAuthorByID(id string) (*domain.Author, error) {
+	if id == "" {
+		return nil, fmt.Errorf("author ID is required")
+	}
+
+	return s.authorRepo.FindByID(id)
+}
+
 func (s *authorService) FindAuthorByName(name string) (*domain.Author, error) {
 	if name == "" {
 		return nil, fmt.Errorf("author name is required")
