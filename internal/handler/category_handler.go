@@ -167,6 +167,20 @@ func (h *CategoryHandler) FindAllCategories(c *gin.Context) {
 		return
 	}
 
+	if len(categories) == 0 {
+		c.JSON(
+			http.StatusNotFound,
+			gin.H{
+				"error": gin.H{
+					"code":    "CATEGORIES_NOT_FOUND",
+					"message": "categories not found",
+					"details": errors.New("Categories not found"),
+				},
+			},
+		)
+		return
+	}
+
 	catFormated := []categoryResponse{}
 	for _, category := range categories {
 		catFormated = append(catFormated, h.formatCategoryDataReturn(category))
