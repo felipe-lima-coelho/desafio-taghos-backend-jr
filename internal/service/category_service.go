@@ -58,3 +58,33 @@ func (s *categoryService) FindCategoryByName(name string) (*domain.Category, err
 func (s *categoryService) FindAllCategories() ([]*domain.Category, error) {
 	return s.categoryRepo.FindAll()
 }
+
+func (s *categoryService) UpdateCategory(category *domain.Category) error {
+	categoryID := category.ID
+	newCategoryName := category.Name
+
+	if categoryID == "" {
+		return fmt.Errorf("category ID is required")
+	}
+	if newCategoryName == "" {
+		return fmt.Errorf("category name is required")
+	}
+
+	categoryOnDB, err := s.categoryRepo.FindByID(categoryID)
+	if err != nil {
+		return fmt.Errorf("error while trying to find the category by ID: %v", err)
+	}
+
+	var nameIsChanged bool
+	if newCategoryName != categoryOnDB.Name {
+		categoryOnDB.Name = newCategoryName
+		nameIsChanged = true
+	}
+
+	if !nameIsChanged {
+		// If the name is not changed, there is no need to update the category
+		return nil
+	}
+
+	return s.categoryRepo.Update(categoryOnDB)
+}
