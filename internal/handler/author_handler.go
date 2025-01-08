@@ -110,6 +110,47 @@ func (h *AuthorHandler) FindAuthorByID(c *gin.Context) {
 	)
 }
 
+func (h *AuthorHandler) FindAuthorByName(c *gin.Context) {
+	authorName := c.Param("name")
+	if authorName == "" {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "INVALID_REQUEST_PARAMETER",
+					"message": "invalid request parameter",
+					"details": "Author name is required",
+				},
+			},
+		)
+		return
+	}
+
+	author, err := h.authorService.FindAuthorByName(authorName)
+	if err != nil {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "FIND_AUTHOR_BY_NAME_ERROR",
+					"message": "error while finding author by name",
+					"details": errors.New("Error while finding author by name: " + err.Error()),
+				},
+			},
+		)
+		return
+	}
+
+	c.JSON(
+		http.StatusOK,
+		gin.H{
+			"data": gin.H{
+				"author": h.formatAuthorResponse(author),
+			},
+		},
+	)
+}
+
 func (h *AuthorHandler) FindAllAuthors(c *gin.Context) {
 	authors, err := h.authorService.FindAllAuthors()
 	if err != nil {
