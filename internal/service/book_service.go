@@ -15,9 +15,15 @@ type BookService interface {
 }
 
 type bookService struct {
-	bookRepo repository.BookRepository
+	bookRepo     repository.BookRepository
+	categoryRepo repository.CategoryRepository
+	authorRepo   repository.AuthorRepository
 }
 
-func NewBookService(bookRepo repository.BookRepository) BookService {
-	return &bookService{bookRepo}
+func NewBookService(
+	bookRepo repository.BookRepository,
+	categoryRepo repository.CategoryRepository,
+	authorRepo repository.AuthorRepository,
+) BookService {
+	return &bookService{bookRepo, categoryRepo, authorRepo}
 }
