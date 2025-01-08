@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com/felipe-lima-coelho/desafio-taghos-backend-jr/internal/domain"
 	"github.com/felipe-lima-coelho/desafio-taghos-backend-jr/internal/repository"
 )
@@ -26,4 +28,23 @@ func NewBookService(
 	authorRepo repository.AuthorRepository,
 ) BookService {
 	return &bookService{bookRepo, categoryRepo, authorRepo}
+}
+
+func (s *bookService) CreateBook(book *domain.Book) error {
+	ok, err := s.validateBook(book)
+	if !ok {
+		return fmt.Errorf("invalid book: %v", err)
+	}
+
+	book, err := s.handleCategory(book)
+	if err != nil {
+		return fmt.Errorf("error while handling category: %v", err)
+	}
+
+	book, err := s.handleAuthor(book)
+	if err != nil {
+		return fmt.Errorf("error while handling author: %v", err)
+	}
+
+	return s.bookRepo.Create(book)
 }
