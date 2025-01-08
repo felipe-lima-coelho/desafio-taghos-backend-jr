@@ -204,3 +204,39 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 		},
 	)
 }
+
+func (h *CategoryHandler) DeleteCategoryByID(c *gin.Context) {
+	id := c.Param("id")
+	if id == "" {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "INVALID_REQUEST_PARAMETER",
+					"message": "invalid request parameter",
+					"details": errors.New("ID is required"),
+				},
+			},
+		)
+		return
+	}
+
+	if err := h.categoryService.DeleteCategoryByID(id); err != nil {
+		c.JSON(
+			http.StatusBadRequest,
+			gin.H{
+				"error": gin.H{
+					"code":    "DELETE_CATEGORY_ERROR",
+					"message": "error while deleting category",
+					"details": errors.New("Error while deleting category: " + err.Error()),
+				},
+			},
+		)
+		return
+	}
+
+	c.JSON(
+		http.StatusNoContent,
+		gin.H{},
+	)
+}
