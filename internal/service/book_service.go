@@ -43,7 +43,7 @@ func (s *bookService) CreateBook(book *domain.Book) error {
 		return fmt.Errorf("error in book_services while handling category: %v", err)
 	}
 
-	book, err = s.handleAuthor(book)
+	book, _, err = s.handleAuthor(book)
 	if err != nil {
 		return fmt.Errorf("error in book_services while handling author: %v", err)
 	}
@@ -101,7 +101,10 @@ func (s *bookService) handleCategory(book *domain.Book) (*domain.Book, *bool, er
 	return book, isCategoryCreated, nil
 }
 
-func (s *bookService) handleAuthor(book *domain.Book) (*domain.Book, error) {
+func (s *bookService) handleAuthor(book *domain.Book) (*domain.Book, *bool, error) {
+	trueValue := true
+	falseValue := false
+	isAuthorCreated := &falseValue
 	authorService := NewAuthorService(s.authorRepo)
 
 	for _, author := range book.Authors {
@@ -110,16 +113,18 @@ func (s *bookService) handleAuthor(book *domain.Book) (*domain.Book, error) {
 		_, err := authorService.FindAuthorByName(author.Name)
 		if err != nil {
 			if !errors.Is(err, gorm.ErrRecordNotFound) {
-				return nil, fmt.Errorf("error in book_services while trying to find the author by name: %v", err)
+				return nil, nil, fmt.Errorf("error in book_services while trying to find the author by name: %v", err)
 			}
 
 			if err := authorService.CreateAuthor(&author); err != nil {
-				return nil, fmt.Errorf("error in book_services while trying to create the author: %v", err)
+				return nil, nil, fmt.Errorf("error in book_services while trying to create the author: %v", err)
 			}
+
+			isAuthorCreated = &trueValue
 		}
 	}
 
-	return book, nil
+	return book, isAuthorCreated, nil
 }
 
 func (s *bookService) FindBookByID(id string) (*domain.Book, error) {
