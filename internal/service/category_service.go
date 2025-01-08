@@ -8,6 +8,7 @@ import (
 type CategoryService interface {
 	CreateCategory(category *domain.Category) error
 	FindCategoryByID(id string) (*domain.Category, error)
+	FindCategoryByName(name string) (*domain.Category, error)
 	FindAllCategories() ([]*domain.Category, error)
 	UpdateCategory(category *domain.Category) error
 	DeleteCategoryByID(id string) error
