@@ -40,12 +40,12 @@ func (s *bookService) CreateBook(book *domain.Book) error {
 
 	book, err = s.handleCategory(book)
 	if err != nil {
-		return fmt.Errorf("error while handling category: %v", err)
+		return fmt.Errorf("error in book_services while handling category: %v", err)
 	}
 
 	book, err = s.handleAuthor(book)
 	if err != nil {
-		return fmt.Errorf("error while handling author: %v", err)
+		return fmt.Errorf("error in book_services while handling author: %v", err)
 	}
 
 	return s.bookRepo.Create(book)
@@ -84,11 +84,11 @@ func (s *bookService) handleCategory(book *domain.Book) (*domain.Book, error) {
 		_, err := catService.FindCategoryByName(category.Name)
 		if err != nil {
 			if !errors.Is(err, gorm.ErrRecordNotFound) {
-				return nil, fmt.Errorf("error while trying to find the category by name: %v", err)
+				return nil, fmt.Errorf("error in book_services while trying to find the category by name: %v", err)
 			}
 
 			if err := catService.CreateCategory(&category); err != nil {
-				return nil, fmt.Errorf("error while trying to create the category: %v", err)
+				return nil, fmt.Errorf("error in book_services while trying to create the category: %v", err)
 			}
 		}
 	}
@@ -105,11 +105,11 @@ func (s *bookService) handleAuthor(book *domain.Book) (*domain.Book, error) {
 		_, err := authorService.FindAuthorByName(author.Name)
 		if err != nil {
 			if !errors.Is(err, gorm.ErrRecordNotFound) {
-				return nil, fmt.Errorf("error while trying to find the author by name: %v", err)
+				return nil, fmt.Errorf("error in book_services while trying to find the author by name: %v", err)
 			}
 
 			if err := authorService.CreateAuthor(&author); err != nil {
-				return nil, fmt.Errorf("error while trying to create the author: %v", err)
+				return nil, fmt.Errorf("error in book_services while trying to create the author: %v", err)
 			}
 		}
 	}
@@ -124,7 +124,7 @@ func (s *bookService) FindBookByID(id string) (*domain.Book, error) {
 
 	book, err := s.bookRepo.FindByID(id)
 	if err != nil {
-		return nil, fmt.Errorf("error book_services while trying to find the book by ID: %v", err)
+		return nil, fmt.Errorf("error in book_services while trying to find the book by ID: %v", err)
 	}
 
 	return book, nil
@@ -137,7 +137,7 @@ func (s *bookService) FindBookByTitle(title string) (*domain.Book, error) {
 
 	book, err := s.bookRepo.FindByTitle(title)
 	if err != nil {
-		return nil, fmt.Errorf("error while trying to find the book by title: %v", err)
+		return nil, fmt.Errorf("error in book_services while trying to find the book by title: %v", err)
 	}
 
 	return book, nil
