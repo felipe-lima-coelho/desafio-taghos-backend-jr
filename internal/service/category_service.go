@@ -88,3 +88,11 @@ func (s *categoryService) UpdateCategory(category *domain.Category) error {
 
 	return s.categoryRepo.Update(categoryOnDB)
 }
+
+func (s *categoryService) DeleteCategoryByID(id string) error {
+	if id == "" {
+		return fmt.Errorf("category ID is required")
+	}
+
+	return s.categoryRepo.Delete(id)
+}
