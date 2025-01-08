@@ -227,12 +227,8 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 	}
 
 	c.JSON(
-		http.StatusOK,
-		gin.H{
-			"data": gin.H{
-				"category": h.formatCategoryDataReturn(&category),
-			},
-		},
+		http.StatusNoContent,
+		gin.H{},
 	)
 }
 
