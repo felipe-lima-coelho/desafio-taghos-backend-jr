@@ -39,6 +39,14 @@ func (s *categoryService) CreateCategory(category *domain.Category) error {
 	return s.categoryRepo.Create(category)
 }
 
+func (s *categoryService) FindCategoryByID(id string) (*domain.Category, error) {
+	if id == "" {
+		return nil, fmt.Errorf("category ID is required")
+	}
+
+	return s.categoryRepo.FindByID(id)
+}
+
 func (s *categoryService) FindCategoryByName(name string) (*domain.Category, error) {
 	if name == "" {
 		return nil, fmt.Errorf("category name is required")
